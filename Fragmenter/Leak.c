@@ -17,8 +17,6 @@ NTSTATUS LeakDriverInfo(const char* pDriverName, PVOID* pImageBase, PULONG pImag
 
 	AuxKlibQueryModuleInformation(&BufferSize, sizeof(AUX_MODULE_EXTENDED_INFO), 0);
 
-	// Simply passing BufferSize *should* have worked, but it didn't.
-	// So, you're about to see some disgusting things later on.
 	pModuleInfoArray = ExAllocatePool2(POOL_FLAG_NON_PAGED, BufferSize, RWHELPER_POOL_TAG);
 	if (!pModuleInfoArray)
 	{
