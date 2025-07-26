@@ -13,7 +13,7 @@ To use this software in its default state, the Fragmenter backdoor must be named
 
 From here, all that's left is to run the exploit.
 
-# Technical Description
+# Technical Details
 ## Igniter
 The user-mode program is designed with automation in mind, which means you should be able to run it and immediately gain arbitrary kernel read/write.
 
