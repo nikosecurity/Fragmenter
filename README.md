@@ -22,10 +22,12 @@ The program first uses the [`fodhelper.exe` UAC bypass](https://www.elastic.co/s
 The Igniter then leaks out the NT kernel base address, the address to overwrite within `nt!SeCiCallbacks`, and the function address for `ZwFlushInstructionCache`. More information on this in a bit.
 
 The loader abuses an arbitrary kernel write within the driver to disable DSE. The target IOCTL to reach the arbitrary write is `0x3CEC04B`, which translates to `GENERIC_READ | GENERIC_WRITE` access and `METHOD_NEITHER`. This means that the function will be using `Type3InputBuffer`, which is a raw user-mode pointer for the input buffer (the function does not reference the `UserBuffer`). The first function reached checks the first `DWORD` present within the input buffer, and if it is, it will call into the vulnerable function with the input buffer as its argument.
-<img width="707" height="408" alt="Depiction of the first function reached upon sending IOCTL 0x3CEC04B" src="https://github.com/user-attachments/assets/1c8835b9-00d8-4fb6-9779-9e3c6a587c87"/>
+
+<img width="707" height="408" alt="The first function reached upon sending IOCTL 0x3CEC04B" src="https://github.com/user-attachments/assets/1c8835b9-00d8-4fb6-9779-9e3c6a587c87"/>
 
 The vulnerable function contains multiple vulnerabilities, most notably however are the two arbitrary writes. By providing a proper input structure, the exploit reaches the vulnerable `memmove` function and gains arbitrary kernel write. From here, it's relatively simple to exploit for LPE. However, I couldn't find a way to exploit it on Windows 10 as I could not think of any kernel objects to abuse. Thankfully, this is meant to disable DSE, not elevate privileges.
-<img width="988" height="308" alt="image" src="https://github.com/user-attachments/assets/8806e102-6515-4417-8f8a-18d2b9cfadb5"/>
+
+<img width="988" height="308" alt="The vulnerable function" src="https://github.com/user-attachments/assets/8806e102-6515-4417-8f8a-18d2b9cfadb5"/>
 
 Using the new-found arbitrary write, the exploit overwrites the `CI!CiValidateImageHeader` entry within the callback structure mentioned previously. This allows for unsigned code to be loaded as the function always returns 0 (`STATUS_SUCCESS`). Realistically however, any function that always returns 0 (or can be forced to return 0 consistently) will work.
 
