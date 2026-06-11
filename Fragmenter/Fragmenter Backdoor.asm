@@ -12,7 +12,7 @@
 
 ; Note that there are no checks against the system buffer nor the input buffer length
 ; This backdoor assumes that the input is correctly formatted
-; Obviously an incorrect assumption, but I have to fit this into the kernel somehow (without it being a real pain in the ass)
+; Obviously an incorrect assumption, but I have to fit this into the kernel somehow (without it being a royal pain)
 
 save_registers:
   push rsi
